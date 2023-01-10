@@ -2,12 +2,14 @@ mod device;
 mod surface;
 mod swapchain;
 
+mod process;
+
 use vulkano::{
     instance::{Instance, InstanceCreateInfo},
     VulkanLibrary,
 };
 
-use winit::event_loop::{self, EventLoop};
+use winit::event_loop::EventLoop;
 
 use std::sync::Arc;
 
@@ -20,7 +22,7 @@ pub struct VisualEngine {
 }
 
 impl VisualEngine {
-    pub fn init() -> Self {
+    pub fn init() {
         let library = VulkanLibrary::new().unwrap();
         let required_extensions = vulkano_win::required_extensions(&library);
 
@@ -43,7 +45,7 @@ impl VisualEngine {
             visual_surface.surface.clone(),
         );
 
-        let visual = Self {
+        let mut visual_engine: VisualEngine = Self {
             vulkan_instance: instance,
             event_loop: event_loop,
             visual_surface: visual_surface,
@@ -51,6 +53,6 @@ impl VisualEngine {
             visual_swapchain: visual_swapchain,
         };
 
-        return visual;
+        visual_engine.process();
     }
 }

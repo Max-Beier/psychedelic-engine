@@ -52,4 +52,6 @@ impl VisualSwapchain {
         let visual_swapchain = Self {};
         return visual_swapchain;
     }
+
+    pub fn recreate(&self) {}
 }
