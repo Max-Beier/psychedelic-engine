@@ -1,4 +1,7 @@
 mod device;
+mod graphics_pipeline;
+mod mesh;
+mod renderpass;
 mod surface;
 mod swapchain;
 
@@ -19,6 +22,8 @@ pub struct VisualEngine {
     visual_surface: surface::VisualSurface,
     visual_device: device::VisualDevice,
     visual_swapchain: swapchain::VisualSwapchain,
+    visual_render_pass: renderpass::VisualRenderPass,
+    visual_graphics_pipeline: graphics_pipeline::VisualGraphicsPipeline,
 }
 
 impl VisualEngine {
@@ -44,6 +49,11 @@ impl VisualEngine {
             visual_device.device.clone(),
             visual_surface.surface.clone(),
         );
+        let visual_render_pass = renderpass::VisualRenderPass::init(
+            visual_device.device.clone(),
+            &visual_swapchain.swapchain,
+        );
+        let visual_graphics_pipeline = graphics_pipeline::VisualGraphicsPipeline::init();
 
         let mut visual_engine: VisualEngine = Self {
             vulkan_instance: instance,
@@ -51,6 +61,8 @@ impl VisualEngine {
             visual_surface: visual_surface,
             visual_device: visual_device,
             visual_swapchain: visual_swapchain,
+            visual_render_pass: visual_render_pass,
+            visual_graphics_pipeline: visual_graphics_pipeline,
         };
 
         visual_engine.process();

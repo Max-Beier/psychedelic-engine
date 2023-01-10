@@ -4,6 +4,7 @@ use vulkano::{
         Device, DeviceCreateInfo, DeviceExtensions, Queue, QueueCreateInfo, QueueFlags,
     },
     instance::Instance,
+    memory::allocator::StandardMemoryAllocator,
     swapchain::Surface,
 };
 
@@ -11,7 +12,8 @@ use std::sync::Arc;
 
 pub struct VisualDevice {
     pub device: Arc<Device>,
-    queue: Arc<Queue>,
+    pub queue: Arc<Queue>,
+    pub memory_allocator: StandardMemoryAllocator,
 }
 
 impl VisualDevice {
@@ -65,10 +67,12 @@ impl VisualDevice {
         .unwrap();
 
         let queue = queues.next().unwrap();
+        let memory_allocator = StandardMemoryAllocator::new_default(device.clone());
 
         let visual_device = Self {
             device: device,
             queue: queue,
+            memory_allocator: memory_allocator,
         };
 
         return visual_device;

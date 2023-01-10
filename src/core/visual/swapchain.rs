@@ -7,7 +7,9 @@ use winit::window::Window;
 
 use std::sync::Arc;
 
-pub struct VisualSwapchain {}
+pub struct VisualSwapchain {
+    pub swapchain: Arc<Swapchain>,
+}
 
 impl VisualSwapchain {
     pub fn init(device: Arc<Device>, surface: Arc<Surface>) -> Self {
@@ -49,7 +51,9 @@ impl VisualSwapchain {
             .unwrap()
         };
 
-        let visual_swapchain = Self {};
+        let visual_swapchain = Self {
+            swapchain: swapchain,
+        };
         return visual_swapchain;
     }
 
