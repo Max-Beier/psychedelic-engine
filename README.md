@@ -30,9 +30,11 @@ I know.
 
 ### So what comes next?
 * Dynamic Materials and Shaders (GLSL) to customize
-* Proper Mesh Input: loading all kinds of geometry files.
+* Proper Mesh Input: loading all kinds of geometry files
 * 3D Rendering Pipeline: making Vertex3D intentional
+* Map System: loading more than one map
 * Physics: Static- and Rigidbodies
 * Sound: 3D Sound Engine
+* UI: Handy UI System
 
 And more (hopefully)
