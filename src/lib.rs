@@ -1,5 +1,6 @@
-use psychedelic_types::{engine::Vertex3D, Mesh3D};
 use visual_engine::VisualEngine;
+
+pub use psychedelic_types::{engine, Mesh3D, Object3D};
 
 pub struct PsychedelicEngine {
     visual_engine: VisualEngine,
@@ -15,22 +16,11 @@ impl PsychedelicEngine {
         return pyschedelic_engine;
     }
 
-    pub fn start(mut self) {
-        let mut mesh = Mesh3D::new();
-        mesh.vertices = vec![
-            Vertex3D {
-                position: [-0.5, -0.5],
-            },
-            Vertex3D {
-                position: [0.0, 0.5],
-            },
-            Vertex3D {
-                position: [0.25, -0.1],
-            },
-        ];
-
+    pub fn load_mesh(&mut self, mesh: Mesh3D) {
         self.visual_engine.load_mesh(mesh);
+    }
 
+    pub fn start(self) {
         self.visual_engine.start();
     }
 }
