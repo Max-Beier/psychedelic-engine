@@ -27,6 +27,16 @@ impl MeshBuffer3D {
         )
         .unwrap();
 
+        let uniform_buffer = CpuAccessibleBuffer::from_iter(
+            memory_allocator,
+            BufferUsage {
+                uniform_buffer: true,
+                ..Default::default()
+            },
+            false,
+            vec![0.0],
+        );
+
         return Self {
             vertex_buffer: vertex_buffer,
         };

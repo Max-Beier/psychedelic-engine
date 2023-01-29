@@ -1,9 +1,9 @@
 use cgmath::Vector3;
 
+#[derive(Clone)]
 pub struct Object3D {
     pub position: Vector3<f32>,
     pub rotation: Vector3<f32>,
-    pub size: Vector3<f32>,
 }
 
 impl Object3D {
@@ -11,7 +11,6 @@ impl Object3D {
         return Self {
             position: Vector3::new(0.0, 0.0, 0.0),
             rotation: Vector3::new(0.0, 0.0, 0.0),
-            size: Vector3::new(1.0, 1.0, 1.0),
         };
     }
 }
