@@ -1,18 +1,9 @@
-use bytemuck::{Pod, Zeroable};
 use std::sync::Arc;
 use vulkano::{
     image::{view::ImageView, ImageAccess, SwapchainImage},
     pipeline::graphics::viewport::Viewport,
     render_pass::{Framebuffer, FramebufferCreateInfo, RenderPass},
 };
-
-#[repr(C)]
-#[derive(Clone, Copy, Debug, Default, Zeroable, Pod)]
-pub struct Vertex {
-    pub position: [f32; 2],
-}
-
-vulkano::impl_vertex!(Vertex, position);
 
 pub fn window_size_dependent_setup(
     images: &[Arc<SwapchainImage>],

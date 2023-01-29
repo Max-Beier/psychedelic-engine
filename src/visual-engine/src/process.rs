@@ -69,7 +69,7 @@ impl super::VisualEngine {
                         self.swapchain = new_swapchain;
                         self.framebuffers = utils::window_size_dependent_setup(
                             &new_images,
-                            self.render_pass.clone(),
+                            self.render_passes.normal.clone(),
                             &mut self.viewport,
                         );
                         recreate_swapchain = false;
@@ -108,12 +108,25 @@ impl super::VisualEngine {
                         )
                         .unwrap()
                         .set_viewport(0, [self.viewport.clone()])
-                        .bind_pipeline_graphics(self.graphics_pipeline.clone())
-                        .bind_vertex_buffers(0, self.vertex_buffer.clone())
-                        .draw(self.vertex_buffer.len() as u32, 1, 0, 0)
-                        .unwrap()
-                        .end_render_pass()
-                        .unwrap();
+                        .bind_pipeline_graphics(self.graphics_pipeline.clone());
+                    self.loaded_meshes
+                        .as_mut_slice()
+                        .into_iter()
+                        .for_each(|mesh| {
+                            builder
+                                .bind_vertex_buffers(
+                                    0,
+                                    mesh.mesh_buffer.as_ref().unwrap().vertex_buffer.clone(),
+                                )
+                                .draw(
+                                    mesh.mesh_buffer.as_ref().unwrap().vertex_buffer.len() as u32,
+                                    1,
+                                    0,
+                                    0,
+                                )
+                                .unwrap();
+                        });
+                    builder.end_render_pass().unwrap();
 
                     let command_buffer = builder.build().unwrap();
 

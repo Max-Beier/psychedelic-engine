@@ -1,7 +1,9 @@
-use super::utils::{self, Vertex};
+use crate::render_passes::RenderPasses;
 
+use super::utils;
+
+use psychedelic_types::engine::Vertex3D;
 use vulkano::{
-    buffer::{BufferUsage, CpuAccessibleBuffer},
     device::{
         physical::PhysicalDeviceType, Device, DeviceCreateInfo, DeviceExtensions, QueueCreateInfo,
         QueueFlags,
@@ -100,16 +102,6 @@ impl super::VisualEngine {
                 .surface_capabilities(&surface, Default::default())
                 .unwrap();
 
-            /*
-            let image_format = Some(
-                device
-                    .physical_device()
-                    .surface_formats(&surface, Default::default())
-                    .unwrap()[0]
-                    .0,
-            );
-            */
-
             let window = surface.object().unwrap().downcast_ref::<Window>().unwrap();
 
             Swapchain::new(
@@ -134,39 +126,9 @@ impl super::VisualEngine {
             .unwrap()
         };
 
+        let render_passes = RenderPasses::new(device.clone(), swapchain.clone());
+
         let memory_allocator = StandardMemoryAllocator::new_default(device.clone());
-
-        let vertices = [
-            Vertex {
-                position: [-0.5, -0.5],
-            },
-            Vertex {
-                position: [0.0, 0.5],
-            },
-            Vertex {
-                position: [0.25, -0.1],
-            },
-            Vertex {
-                position: [-0.5, -0.5],
-            },
-            Vertex {
-                position: [0.0, 0.5],
-            },
-            Vertex {
-                position: [1.0, -0.1],
-            },
-        ];
-
-        let vertex_buffer = CpuAccessibleBuffer::from_iter(
-            &memory_allocator,
-            BufferUsage {
-                vertex_buffer: true,
-                ..Default::default()
-            },
-            false,
-            vertices,
-        )
-        .unwrap();
 
         mod vs {
             vulkano_shaders::shader! {
@@ -197,26 +159,9 @@ impl super::VisualEngine {
         let vs = vs::load(device.clone()).unwrap();
         let fs = fs::load(device.clone()).unwrap();
 
-        let render_pass = vulkano::single_pass_renderpass!(
-            device.clone(),
-            attachments: {
-                color: {
-                    load: Clear,
-                    store: Store,
-                    format: swapchain.image_format(),
-                    samples: 1,
-                }
-            },
-            pass: {
-                color: [color],
-                depth_stencil: {}
-            }
-        )
-        .unwrap();
-
         let graphics_pipeline = GraphicsPipeline::start()
-            .render_pass(Subpass::from(render_pass.clone(), 0).unwrap())
-            .vertex_input_state(BuffersDefinition::new().vertex::<Vertex>())
+            .render_pass(Subpass::from(render_passes.normal.clone(), 0).unwrap())
+            .vertex_input_state(BuffersDefinition::new().vertex::<Vertex3D>())
             .input_assembly_state(InputAssemblyState::new())
             .vertex_shader(vs.entry_point("main").unwrap(), ())
             .viewport_state(ViewportState::viewport_dynamic_scissor_irrelevant())
@@ -230,8 +175,11 @@ impl super::VisualEngine {
             depth_range: 0.0..1.0,
         };
 
-        let framebuffers =
-            utils::window_size_dependent_setup(&images, render_pass.clone(), &mut viewport);
+        let framebuffers = utils::window_size_dependent_setup(
+            &images,
+            render_passes.normal.clone(),
+            &mut viewport,
+        );
 
         let visual_engine = Self {
             event_loop: event_loop,
@@ -239,11 +187,12 @@ impl super::VisualEngine {
             device: device,
             queue: queue,
             swapchain: swapchain,
-            vertex_buffer: vertex_buffer,
-            render_pass: render_pass,
+            memory_allocator: memory_allocator,
+            render_passes: render_passes,
             graphics_pipeline: graphics_pipeline,
             viewport: viewport,
             framebuffers: framebuffers,
+            loaded_meshes: vec![],
         };
 
         return visual_engine;
