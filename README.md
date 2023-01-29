@@ -11,13 +11,13 @@ fn main() {
     let mut mesh: pe::Mesh3D = pe::Mesh3D::new();
     mesh.vertices = vec![
         pe::engine::Vertex3D {
-            position: [-0.5, -0.5],
+            position: [-0.5, -0.5, 0.0],
         },
         pe::engine::Vertex3D {
-            position: [0.0, 0.5],
+            position: [0.0, 0.5, 0.0],
         },
         pe::engine::Vertex3D {
-            position: [0.25, -0.1],
+            position: [0.25, -0.1, 0.0],
         },
     ];
 
