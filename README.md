@@ -1,6 +1,8 @@
 # Psychedelic Engine
 Lightweight game engine written in Rust.
 
+# UPDATE: Project currently on hold due to commercial projects
+
 ## Getting Started
 ```rust
 use psychedelic_engine as pe;
@@ -29,6 +31,7 @@ That's boring...
 I know.
 
 ### So what comes next?
+* Rewrite core componets with Ash Vulkan Wrapper for more low level control, especially for custom shading with Materials
 * Dynamic Materials and Shaders (GLSL) to customize
 * 3D Rendering Pipeline: making Vertex3D intentional
 * Proper Mesh Input: loading all kinds of geometry files
